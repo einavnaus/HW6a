@@ -12,27 +12,27 @@ char* readline();
 char** split_string(char*);
 
 //Define the structs of the 2-sided linked list.
-typedef struct singly_linked_list_node singly_linked_list_node;
-typedef struct singly_linked_list singly_linked_list;
+typedef struct singly_linked_list_node_t singly_linked_list_node_t;
+typedef struct singly_linked_list_t singly_linked_list_t;
 
-struct singly_linked_list_node {
+struct singly_linked_list_node_t {
 	char *data;
-	singly_linked_list_node *next;
-	singly_linked_list_node *prev;
+	singly_linked_list_node_t *next;
+	singly_linked_list_node_t *prev;
 
 };
 
-struct singly_linked_list {
-	singly_linked_list_node *head;
-	singly_linked_list_node *tail;
+struct singly_linked_list_t {
+	singly_linked_list_node_t *head;
+	singly_linked_list_node_t *tail;
 };
 
 //Creates a new&un filled node instance.
-singly_linked_list_node* create_singly_linked_list_node(char *node_data) {
+singly_linked_list_node_t* create_singly_linked_list_node(char *node_data) {
 	if(node_data == NULL) {
 		return NULL;
 	}
-	singly_linked_list_node *node = malloc(sizeof(singly_linked_list_node));
+	singly_linked_list_node_t *node = malloc(sizeof(singly_linked_list_node_t));
 	if (!node){
 		return NULL;
 	}
@@ -43,8 +43,8 @@ singly_linked_list_node* create_singly_linked_list_node(char *node_data) {
 }
 
 //creates new&un-filled list instance.
-singly_linked_list* create_singly_linked_list (){
-	singly_linked_list *new_list = malloc(sizeof(singly_linked_list));
+singly_linked_list_t* create_singly_linked_list (){
+	singly_linked_list_t *new_list = malloc(sizeof(singly_linked_list_t));
 	if (!new_list){
 		return NULL;
 	}
@@ -57,32 +57,32 @@ singly_linked_list* create_singly_linked_list (){
 //the function take new data and existing list, create new node that containing
 //the data, and add it to the end of the given list.
 void insert_node_into_singly_linked_list(
-		singly_linked_list *singly_linked_list,
+		singly_linked_list_t *singly_linked_list_t,
 		char *node_data) {
 
-	if ( singly_linked_list == NULL || node_data == NULL ) {
+	if ( singly_linked_list_t == NULL || node_data == NULL ) {
 		return;
 	}
 
-	singly_linked_list_node *node = create_singly_linked_list_node(node_data);
+	singly_linked_list_node_t *node = create_singly_linked_list_node(node_data);
 
-	if (!(singly_linked_list)->head) {
-		(singly_linked_list)->head = node;
+	if (!(singly_linked_list_t)->head) {
+		(singly_linked_list_t)->head = node;
 	} else {
-		node->prev = (singly_linked_list)->tail;
-		(singly_linked_list)->tail->next = node;
+		node->prev = (singly_linked_list_t)->tail;
+		(singly_linked_list_t)->tail->next = node;
 	}
 
-	(singly_linked_list)->tail = node;
+	(singly_linked_list_t)->tail = node;
 
 	return;
 }
 
 //The function take pointer to array of pointers and convert it to 2-sided
 //linked list.
-singly_linked_list* convert_to_list(int size_of_list, char** list_elements){
+singly_linked_list_t* convert_to_list(int size_of_list, char** list_elements){
 
-	singly_linked_list *new_list = create_singly_linked_list();
+	singly_linked_list_t *new_list = create_singly_linked_list();
 	for (int i = 0; i< size_of_list; i++){
 		insert_node_into_singly_linked_list(new_list,*(list_elements+i));
 	}
@@ -91,13 +91,13 @@ singly_linked_list* convert_to_list(int size_of_list, char** list_elements){
 }
 
 //The function free all dynamic allocated memory that used by the given list.
-void free_singly_linked_list(singly_linked_list *list) {
+void free_singly_linked_list(singly_linked_list_t *list) {
 	if(list == NULL) {
 		return;
 	}
-	singly_linked_list_node *head = (list)->head;
-	singly_linked_list_node *temp_node;
-	singly_linked_list_node *cursor = head;
+	singly_linked_list_node_t *head = (list)->head;
+	singly_linked_list_node_t *temp_node;
+	singly_linked_list_node_t *cursor = head;
 
 	while (cursor) {
 		temp_node = cursor;
@@ -112,15 +112,15 @@ void free_singly_linked_list(singly_linked_list *list) {
 
 //The function get data, and search in the given 2-sided linked list
 //a node that match it.
-singly_linked_list_node* list_contains(
-		singly_linked_list_node *head,
+singly_linked_list_node_t* list_contains(
+		singly_linked_list_node_t *head,
 		char *data) {
 
 
 	if (head == NULL || data == NULL) {
 		return NULL;
 	}
-	for (singly_linked_list_node *cursor=head; cursor; cursor=cursor->next) {
+	for (singly_linked_list_node_t *cursor=head; cursor; cursor=cursor->next) {
 		char *tmp_data = cursor->data;
 
 		if(tmp_data ==NULL) {
@@ -138,9 +138,9 @@ singly_linked_list_node* list_contains(
 
 // The function remove a specific node from the given 2-sided linked list.
 //the function free the memory that used by the node.
-void delete_node(singly_linked_list_node *node,singly_linked_list *list) {
+void delete_node(singly_linked_list_node_t *node,singly_linked_list_t *list) {
 
-	singly_linked_list_node *temp = node;
+	singly_linked_list_node_t *temp = node;
 	if ((list->head)!=(list->tail)) {
 		if (!(list->head)){
 			return;
@@ -175,7 +175,7 @@ void checkMagazine(
 		int note_count,
 		char **note) {
 
-	singly_linked_list *map = convert_to_list(magazine_count,magazine);
+	singly_linked_list_t *map = convert_to_list(magazine_count,magazine);
 
 	if(magazine_count < note_count){
 		printf("No");
@@ -184,7 +184,7 @@ void checkMagazine(
 	}
 
 	for(int i =0; i< note_count; i++){
-		singly_linked_list_node *tmp = list_contains(((map)->head),*(note+i));
+		singly_linked_list_node_t *tmp = list_contains(((map)->head),*(note+i));
 		if(!tmp){
 			printf("No");
 			free_singly_linked_list(map);
